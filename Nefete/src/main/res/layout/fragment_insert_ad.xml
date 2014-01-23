@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<GridLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignBounds"
+        android:columnOrderPreserved="false"
+        android:columnCount="2"
+        >
+
+    <org.kamol.widgets.ExpandableGridView
+            android:id="@+id/gv_images"
+            android:layout_columnSpan="2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="90dp"
+            android:horizontalSpacing="4dp"
+            android:isScrollContainer="false"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="4dp"
+            />
+
+    <EditText
+            android:hint="What are you selling?"
+            android:inputType="text"
+            android:layout_columnSpan="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    <EditText
+            android:hint="Item descriptions (256)"
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:maxLines="2"
+            android:gravity="top|left"
+            android:layout_columnSpan="2"
+            android:layout_rowSpan="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    <Spinner
+            android:id="@+id/sp_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:entries="@array/currency_array"
+            />
+
+    <EditText
+            android:hint="Price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_column="1"
+            />
+
+    <Spinner
+            android:id="@+id/sp_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:gravity="right"
+            android:entries="@array/category_array"
+            />
+
+</GridLayout>

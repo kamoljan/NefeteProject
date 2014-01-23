@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Nefete</string>
+    <string name="app_id">1454662381420609</string>
+    <string name="title_list_ad">Listing</string>
+    <string name="title_insert_ad">Insert ad</string>
+    <string name="title_profile">Profile</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="yellow_start">#FEF683</color>
+    <color name="yellow_end">#FBE67E</color>
+    <color name="green_start">#32cd32</color>
+    <color name="green_end">#008000</color>
+    <color name="grey_start">#ffe3e8f1</color>
+    <color name="grey_end">#ffd5dd</color>
+    <color name="grey_divider">#b3b3b3</color>
+    <color name="orange_start">#ffa500</color>
+    <color name="orange_end">#ff8c00</color>
+
+    <color name="second_menu">#E1E0D4</color>
+
+    <color name="body">#fffee5</color>
+    <color name="white">#ffffff</color>
+    <color name="bar_line">#C0C0C0</color>
+    <color name="bar_bg">#40817679</color>
+    <color name="grey">#E6E6DD</color>
+    <color name="dark_grey">#434343</color>
+    <color name="yellow">#FFFCD5</color>
+    <color name="red">#C82121</color>
+    <drawable name="translucent_background">#e0000000</drawable>
+</resources>
