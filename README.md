@@ -2,3 +2,5 @@ https://developers.facebook.com/docs/getting-started/facebook-sdk-for-android-us
 
 add <option name="APK_PATH" value="/build/apk/Nefete-debug-unaligned.apk" />
 into Nefete.iml
+add <option name="APK_PATH" value="/../../Nefete/build/apk/Nefete-debug-unaligned.apk" />
+into facebook.iml
