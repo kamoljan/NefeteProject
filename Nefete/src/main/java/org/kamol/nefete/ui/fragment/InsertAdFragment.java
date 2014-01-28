@@ -36,7 +36,7 @@ public class InsertAdFragment extends Fragment {
         spCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), "Currency = " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "Currency = " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -59,7 +59,7 @@ public class InsertAdFragment extends Fragment {
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), "Hello :)", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "Hello :)", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -69,7 +69,7 @@ public class InsertAdFragment extends Fragment {
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), "Category = " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "Category = " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override

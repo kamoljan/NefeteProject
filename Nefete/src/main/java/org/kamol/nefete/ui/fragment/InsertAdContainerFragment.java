@@ -13,8 +13,8 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import org.kamol.nefete.R;
 
-public class ListAdFragment extends Fragment {
-    private static final String TAG = "ListAdFragment";
+public class InsertAdContainerFragment extends Fragment {
+    private static final String TAG = "InsertAdContainerFragment";
 
     private UiLifecycleHelper uiHelper;
     private Fragment insertAdFragment;
@@ -45,13 +45,13 @@ public class ListAdFragment extends Fragment {
         uiHelper.onCreate(savedInstanceState);
     }
 
-    public static ListAdFragment newInstance() {
-        return new ListAdFragment();
+    public static InsertAdContainerFragment newInstance() {
+        return new InsertAdContainerFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list_ad, container, false);
+        return inflater.inflate(R.layout.fragment_container_insert_ad, container, false);
     }
 
     @Override
