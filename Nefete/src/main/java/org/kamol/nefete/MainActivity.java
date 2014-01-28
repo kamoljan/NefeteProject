@@ -1,14 +1,9 @@
 package org.kamol.nefete;
 
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import org.kamol.nefete.ui.fragment.InsertAdFragment;
 import org.kamol.nefete.ui.fragment.ListAdFragment;
@@ -128,65 +123,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //            }
 //            return null;
 //        }
-
-        public int getPageIcon(int position) {
-            switch (position) {
-                case 0:
-                    return android.R.drawable.ic_menu_search;
-                case 1:
-                    return android.R.drawable.ic_menu_camera;
-                case 2:
-                    return android.R.drawable.ic_menu_myplaces;
-            }
-            return 0;
-        }
-
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a DummyFragment (defined as a static inner class below).
-            //return DummyFragment.newInstance(position + 1);
-            switch (position) {
-                case 0:
-                    return ListAdFragment.newInstance();
-                case 1:
-                    return InsertAdFragment.newInstance();
-                default:
-                    return ProfileFragment.newInstance();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_list_ad).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_insert_ad).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_profile).toUpperCase(l);
-            }
-            return null;
-        }
 
         public int getPageIcon(int position) {
             switch (position) {

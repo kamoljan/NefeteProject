@@ -11,6 +11,7 @@ import org.kamol.nefete.R;
 import org.kamol.nefete.adapter.InsertAdImageAdapter;
 
 public class InsertAdFragment extends Fragment {
+    private static final String TAG = "InsertAdFragment";
 
     public static InsertAdFragment newInstance() {
         return new InsertAdFragment();

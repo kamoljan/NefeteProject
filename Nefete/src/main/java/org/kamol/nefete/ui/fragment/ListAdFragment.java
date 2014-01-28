@@ -11,19 +11,22 @@ import android.view.ViewGroup;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.LoginButton;
 import org.kamol.nefete.R;
 
 public class ListAdFragment extends Fragment {
     private static final String TAG = "ListAdFragment";
 
     private UiLifecycleHelper uiHelper;
+    private Fragment insertAdFragment;
+    private Fragment splashFragment;
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
+            showInsertAdFragment();
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
+            showSplashFragment();
         }
     }
 
@@ -37,6 +40,7 @@ public class ListAdFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
     }
@@ -47,10 +51,7 @@ public class ListAdFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_splash, container, false);
-        LoginButton lbFacebook = (LoginButton) view.findViewById(R.id.lb_facebook);
-        lbFacebook.setFragment(this);
-        return view;
+        return inflater.inflate(R.layout.fragment_list_ad, container, false);
     }
 
     @Override
@@ -60,11 +61,11 @@ public class ListAdFragment extends Fragment {
         // session is not null, the session state change notification
         // may not be triggered. Trigger it if it's open/closed.
         Session session = Session.getActiveSession();
-        if (session != null &&
-                (session.isOpened() || session.isClosed()) ) {
+        if (session != null && (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session, session.getState(), null);
+        } else {
+            showSplashFragment();
         }
-
         uiHelper.onResume();
     }
 
@@ -92,9 +93,23 @@ public class ListAdFragment extends Fragment {
         uiHelper.onSaveInstanceState(outState);
     }
 
+    private void showInsertAdFragment() {
+        if (insertAdFragment == null) {
+            insertAdFragment = new InsertAdFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.ll_list_ad_container, insertAdFragment, "InsertAdFragment");
+            //transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
+
     private void showSplashFragment() {
-        Fragment splashFragment = new SplashFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.rl_list_ad, splashFragment).commit();
+        if (splashFragment == null) {
+            splashFragment = new SplashFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.ll_list_ad_container, splashFragment, "SplashFragment");
+            //transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 }
