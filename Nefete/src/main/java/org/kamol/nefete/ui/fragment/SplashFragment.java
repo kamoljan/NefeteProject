@@ -15,7 +15,8 @@ public class SplashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
         LoginButton lbFacebook = (LoginButton) view.findViewById(R.id.lb_facebook);
-        lbFacebook.setFragment(this);
+        lbFacebook.setFragment(getParentFragment());
+        //lbFacebook.setReadPermissions(Arrays.asList("user_likes", "user_status"));
         return view;
     }
 
