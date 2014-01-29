@@ -3,7 +3,10 @@ package org.kamol.nefete;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import org.kamol.nefete.ui.fragment.InsertAdContainerFragment;
 import org.kamol.nefete.ui.fragment.ListAdContainerFragment;
@@ -109,20 +112,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public int getCount() {
             return 3;
         }
-
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            Locale l = Locale.getDefault();
-//            switch (position) {
-//                case 0:
-//                    return getString(R.string.title_list_ad).toUpperCase(l);
-//                case 1:
-//                    return getString(R.string.title_insert_ad).toUpperCase(l);
-//                case 2:
-//                    return getString(R.string.title_profile).toUpperCase(l);
-//            }
-//            return null;
-//        }
 
         public int getPageIcon(int position) {
             switch (position) {
