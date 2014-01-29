@@ -40,7 +40,6 @@ public class InsertAdContainerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
     }
@@ -94,21 +93,25 @@ public class InsertAdContainerFragment extends Fragment {
     }
 
     private void showInsertAdFragment() {
-        if (insertAdFragment == null) {
+        if (getChildFragmentManager().findFragmentByTag("InsertAdFragment") != null) {
+            insertAdFragment = getChildFragmentManager().findFragmentByTag("InsertAdFragment");
+        } else {
             insertAdFragment = new InsertAdFragment();
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.ll_list_ad_container, insertAdFragment, "InsertAdFragment");
-            //transaction.addToBackStack(null);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
     }
 
     private void showSplashFragment() {
-        if (splashFragment == null) {
+        if (getChildFragmentManager().findFragmentByTag("SplashFragment") != null) {
+            splashFragment = getChildFragmentManager().findFragmentByTag("SplashFragment");
+        } else {
             splashFragment = new SplashFragment();
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.ll_list_ad_container, splashFragment, "SplashFragment");
-            //transaction.addToBackStack(null);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
     }
