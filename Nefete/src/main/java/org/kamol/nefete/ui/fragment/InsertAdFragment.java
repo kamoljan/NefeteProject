@@ -2,6 +2,7 @@ package org.kamol.nefete.ui.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,11 +11,12 @@ import android.widget.*;
 import org.kamol.nefete.R;
 import org.kamol.nefete.adapter.InsertAdImageAdapter;
 
-public class InsertAdFragment extends Fragment {
+public class InsertAdFragment extends Fragment implements ImageChooserDialogFragment.OnImageChooserDialogListener {
     private static final String TAG = "InsertAdFragment";
 
-    public static InsertAdFragment newInstance() {
-        return new InsertAdFragment();
+    @Override
+    public void onCloseDialog(int item) {
+        Toast.makeText(getActivity(), "Item = " + item, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -59,7 +61,10 @@ public class InsertAdFragment extends Fragment {
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(view.getContext(), "Hello :)", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "position = " + position);
+                ImageChooserDialogFragment imgDialog = new ImageChooserDialogFragment();
+                imgDialog.setOnImageChooserDialogListener(InsertAdFragment.this);
+                imgDialog.show(getFragmentManager(), "ImageChooserDialogFragment");
             }
         });
     }
