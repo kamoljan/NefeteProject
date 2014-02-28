@@ -3,23 +3,33 @@
              android:layout_width="fill_parent"
              android:layout_height="wrap_content">
 
-    <LinearLayout
+    <ViewAnimator
+            android:id="@+id/va_animator"
             android:layout_width="fill_parent"
             android:layout_height="100dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:focusable="false">
+            android:animateFirstView="false"
+            >
 
         <ImageView
                 android:id="@+id/iv_thumb"
                 android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:cropToPadding="true"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_camera"
-                android:padding="2dp"/>
+                android:layout_height="100dp"
+                android:padding="2dp"
+                android:src="@android:drawable/ic_menu_camera"/>
 
-    </LinearLayout>
+        <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                />
 
+        <ImageView
+                android:id="@+id/iv_empty"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:padding="2dp"
+                android:src="@drawable/dotted_rectangle"/>
+
+    </ViewAnimator>
 </FrameLayout>

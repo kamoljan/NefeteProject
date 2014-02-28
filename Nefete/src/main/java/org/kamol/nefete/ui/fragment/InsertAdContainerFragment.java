@@ -1,5 +1,8 @@
 package org.kamol.nefete.ui.fragment;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -8,17 +11,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.squareup.otto.Produce;
+
 import org.kamol.nefete.R;
+import org.kamol.nefete.bus.BusProvider;
+import org.kamol.nefete.event.ActivityResultEvent;
+
+import java.io.ByteArrayOutputStream;
 
 public class InsertAdContainerFragment extends Fragment {
     private static final String TAG = "InsertAdContainerFragment";
 
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
+
     private UiLifecycleHelper uiHelper;
     private Fragment insertAdFragment;
     private Fragment splashFragment;
+
+    private int mRequestCode;
+    private int mResultCode;
+    private Intent mData;
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
@@ -56,6 +72,8 @@ public class InsertAdContainerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
+
         // For scenarios where the main activity is launched and user
         // session is not null, the session state change notification
         // may not be triggered. Trigger it if it's open/closed.
@@ -68,16 +86,17 @@ public class InsertAdContainerFragment extends Fragment {
         uiHelper.onResume();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        uiHelper.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
+        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -115,4 +134,22 @@ public class InsertAdContainerFragment extends Fragment {
             transaction.commit();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+
+        mRequestCode = requestCode;
+        mResultCode = resultCode;
+        mData = data;
+//        BusProvider.getInstance().post(new ActivityResultEvent(requestCode, resultCode, data));
+        BusProvider.getInstance().post(produceActivityResultEvent());
+    }
+
+    @Produce
+    public ActivityResultEvent produceActivityResultEvent() {
+        return new ActivityResultEvent(mRequestCode, mResultCode, mData);
+    }
+
 }

@@ -1,5 +1,18 @@
 package org.kamol.nefete.adapter;
 
+import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ViewAnimator;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,22 +20,23 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import org.kamol.nefete.R;
+import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
+import org.kamol.nefete.R;
+import org.kamol.nefete.bus.BusProvider;
 
 public class InsertAdImageAdapter extends BaseAdapter {
     private static final int DEFAULT_MAX_COUNT = 3;
     private List<String> imageIds = new ArrayList<String>(DEFAULT_MAX_COUNT);
     private int maxCount = DEFAULT_MAX_COUNT;
+    private static DownloadTask downloadTask;
+    private ViewHolder holder;
+    private final Context context;
+
+    public InsertAdImageAdapter(Context context) {
+        this.context = context;
+    }
 
     @Override
     public int getCount() {
@@ -39,20 +53,40 @@ public class InsertAdImageAdapter extends BaseAdapter {
         return position;
     }
 
+    static class ViewHolder {
+        ImageView iv_image;
+        ViewAnimator va_animator;
+        ImageView iv_empty;
+    }
+
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        Context context = parent.getContext();
-        View view;
+    public View getView(final int position, View view, ViewGroup parent) {
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.insert_ad_image, parent, false);
+            holder = new ViewHolder();
+            holder.iv_image = (ImageView) view.findViewById(R.id.iv_thumb);
+            holder.va_animator = (ViewAnimator) view.findViewById(R.id.va_animator);
+            holder.iv_empty = (ImageView) view.findViewById(R.id.iv_empty);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
         if (position <= getRealCount()) {
-            view = LayoutInflater.from(context).inflate(R.layout.insert_ad_image, null);
+            holder.va_animator.setDisplayedChild(0); // show default or real image
             if (position < getRealCount()) {
-                final ImageView ivThumb = (ImageView) view.findViewById(R.id.iv_thumb);
-                //String url = ACInsertAdPictureChooser.getThumbUrl(imageIds.get(position));
-                //ivThumb.setTag(url);
-                ivThumb.setImageResource(android.R.drawable.ic_btn_speak_now);
+                String url = imageIds.get(position);
+                // Trigger the download of the URL asynchronously into the image view.
+                Picasso.with(context)
+                        .load(url)
+                        .placeholder(android.R.drawable.ic_menu_camera)
+                        .error(android.R.drawable.ic_input_delete)
+                        .resizeDimen(R.dimen.list_detail_image_size, R.dimen.list_detail_image_size)
+                        .centerInside()
+                        .into(holder.iv_image);
             }
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.insert_ad_image_empty, null);
+            holder.va_animator.setDisplayedChild(2); // show empty box
         }
         return view;
     }
@@ -122,4 +156,41 @@ public class InsertAdImageAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
+
+    //***************** OTTO *****************
+    @Subscribe
+    public void onImageAvailable(ImageAvailableEvent event) {
+        if (holder.iv_image != null) {
+            holder.iv_image.setImageDrawable(event.image);
+            holder.va_animator.setDisplayedChild(0);  // show default or real image
+        }
+    }
+
+    private static class ImageAvailableEvent {
+        public final Drawable image;
+
+        ImageAvailableEvent(Drawable image) {
+            this.image = image;
+        }
+    }
+
+    private static class DownloadTask extends AsyncTask<String, Void, Drawable> {
+        @Override
+        protected Drawable doInBackground(String... params) {
+            try {
+                return BitmapDrawable.createFromStream(new URL(params[0]).openStream(), "bitmap.jpg");
+            } catch (Exception e) {
+                Log.e("LocationMapFragment", "Unable to download image.", e);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            if (!isCancelled() && drawable != null) {
+                BusProvider.getInstance().post(new ImageAvailableEvent(drawable));
+            }
+        }
+    }
+    //***************** OTTO *****************
 }
