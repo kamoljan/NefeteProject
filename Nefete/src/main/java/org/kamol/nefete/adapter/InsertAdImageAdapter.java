@@ -30,7 +30,6 @@ public class InsertAdImageAdapter extends BaseAdapter {
     private static final int DEFAULT_MAX_COUNT = 3;
     private List<String> imageIds = new ArrayList<String>(DEFAULT_MAX_COUNT);
     private int maxCount = DEFAULT_MAX_COUNT;
-    private static DownloadTask downloadTask;
     private ViewHolder holder;
     private final Context context;
 
@@ -75,6 +74,7 @@ public class InsertAdImageAdapter extends BaseAdapter {
         if (position <= getRealCount()) {
             holder.va_animator.setDisplayedChild(0); // show default or real image
             if (position < getRealCount()) {
+                holder.va_animator.setDisplayedChild(0); // show progress bar
                 String url = imageIds.get(position);
                 // Trigger the download of the URL asynchronously into the image view.
                 Picasso.with(context)
@@ -156,41 +156,4 @@ public class InsertAdImageAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
-
-    //***************** OTTO *****************
-    @Subscribe
-    public void onImageAvailable(ImageAvailableEvent event) {
-        if (holder.iv_image != null) {
-            holder.iv_image.setImageDrawable(event.image);
-            holder.va_animator.setDisplayedChild(0);  // show default or real image
-        }
-    }
-
-    private static class ImageAvailableEvent {
-        public final Drawable image;
-
-        ImageAvailableEvent(Drawable image) {
-            this.image = image;
-        }
-    }
-
-    private static class DownloadTask extends AsyncTask<String, Void, Drawable> {
-        @Override
-        protected Drawable doInBackground(String... params) {
-            try {
-                return BitmapDrawable.createFromStream(new URL(params[0]).openStream(), "bitmap.jpg");
-            } catch (Exception e) {
-                Log.e("LocationMapFragment", "Unable to download image.", e);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (!isCancelled() && drawable != null) {
-                BusProvider.getInstance().post(new ImageAvailableEvent(drawable));
-            }
-        }
-    }
-    //***************** OTTO *****************
 }

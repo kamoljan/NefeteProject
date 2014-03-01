@@ -1,8 +1,5 @@
 package org.kamol.nefete.ui.fragment;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -21,12 +18,8 @@ import org.kamol.nefete.R;
 import org.kamol.nefete.bus.BusProvider;
 import org.kamol.nefete.event.ActivityResultEvent;
 
-import java.io.ByteArrayOutputStream;
-
 public class InsertAdContainerFragment extends Fragment {
     private static final String TAG = "InsertAdContainerFragment";
-
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
 
     private UiLifecycleHelper uiHelper;
     private Fragment insertAdFragment;
