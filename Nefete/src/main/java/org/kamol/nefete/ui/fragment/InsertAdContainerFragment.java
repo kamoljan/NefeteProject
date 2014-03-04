@@ -79,12 +79,6 @@ public class InsertAdContainerFragment extends Fragment {
         uiHelper.onResume();
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        uiHelper.onActivityResult(requestCode, resultCode, data);
-//    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -136,7 +130,6 @@ public class InsertAdContainerFragment extends Fragment {
         mRequestCode = requestCode;
         mResultCode = resultCode;
         mData = data;
-//        BusProvider.getInstance().post(new ActivityResultEvent(requestCode, resultCode, data));
         BusProvider.getInstance().post(produceActivityResultEvent());
     }
 

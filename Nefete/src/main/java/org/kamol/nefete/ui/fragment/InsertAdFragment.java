@@ -170,7 +170,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                     mImage.setNewborn(mes.Result.Newborn);
                     mImage.setInfant(mes.Result.Infant);
                     mImage.setBaby(mes.Result.Baby);
-                    insertAdImageAdapter.addItem(GoRestClient.getAbsoluteUrl(":9090/egg/" + mes.Result.Baby));
+                    insertAdImageAdapter.addItem(GoRestClient.getAbsoluteUrl(":9090/egg/" + mImage.getBaby()));
                 }
             }
         });
@@ -210,15 +210,15 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_insert_ad, container, false);
-        setGvImagesContent(view);
-
-        etTitle = (EditText) view.findViewById(R.id.et_title);
-        etDescription = (EditText) view.findViewById(R.id.et_description);
-        etPrice = (EditText) view.findViewById(R.id.et_price);
-
-        setSpCurrencyContent(view);
-        setSpCategoryContent(view);
-        setBntContent(view);
+        if (view != null) {
+            setGvImagesContent(view);
+            etTitle = (EditText) view.findViewById(R.id.et_title);
+            etDescription = (EditText) view.findViewById(R.id.et_description);
+            etPrice = (EditText) view.findViewById(R.id.et_price);
+            setSpCurrencyContent(view);
+            setSpCategoryContent(view);
+            setBntContent(view);
+        }
         return view;
     }
 
@@ -228,21 +228,21 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
             @Override
             public void onClick(View v) {
                 boolean isOk = true;
-                if (etTitle.getText().length() > 0) {
+                if (etTitle.getText() != null && etTitle.getText().length() > 0) {
                     mAd.setTitle(etTitle.getText().toString());
                     etTitle.setError(null);
                 } else {
                     etTitle.setError("Tell people what you are selling!");
                     isOk = false;
                 }
-                if (etDescription.getText().length() > 0) {
+                if (etDescription.getText() != null && etDescription.getText().length() > 0) {
                     mAd.setDescription(etDescription.getText().toString());
                     etDescription.setError(null);
                 } else {
                     etDescription.setError("People might not buy your item if they don't understand what you're selling. Why not describe it?");
                     isOk = false;
                 }
-                if (etPrice.getText().length() > 0) {
+                if (etPrice.getText() != null && etPrice.getText().length() > 0) {
                     mAd.setPrice(etPrice.getText().toString());
                     etPrice.setError(null);
                 } else {
@@ -268,7 +268,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                             // If the response is successful
                             if (session == Session.getActiveSession()) {
                                 if (user != null) {
-                                    mUserId = user.getId();//user id, user.getName()
+                                    mUserId = user.getId(); //user id, user.getName()
                                     RequestParams p = new RequestParams();
                                     p.put("profile", mUserId);
                                     p.put("title", mAd.getTitle());
