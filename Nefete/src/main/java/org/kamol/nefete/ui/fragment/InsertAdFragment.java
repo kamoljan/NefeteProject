@@ -26,6 +26,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,6 +39,8 @@ import com.squareup.otto.Subscribe;
 import org.kamol.nefete.R;
 import org.kamol.nefete.adapter.InsertAdImageAdapter;
 import org.kamol.nefete.bus.BusProvider;
+import org.kamol.nefete.datasets.Ad;
+import org.kamol.nefete.datasets.Image;
 import org.kamol.nefete.event.ActivityResultEvent;
 import org.kamol.nefete.http.GoRestClient;
 
@@ -45,6 +51,13 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
     private static final int REQUEST_TAKE = 1888;
     private static final int REQUEST_BROWSE = 1999;
     private static final int THUMBNAIL_SIZE = 500;
+
+    private EditText etTitle;
+    private EditText etDescription;
+    private EditText etPrice;
+    private static Ad mAd = new Ad();
+    private static Image mImage = new Image();
+    private static String mUserId;
 
     @Override
     public void onCloseDialog(int item) {
@@ -105,6 +118,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
         }
     }
 
+    // Credit to http://stackoverflow.com/questions/3879992/get-bitmap-from-an-uri-android
     public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
         InputStream input = getActivity().getContentResolver().openInputStream(uri);
 
@@ -153,10 +167,9 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                 Message mes = gson.fromJson(jsonObject.toString(), Message.class);
                 if (mes.Status.equals("OK")) {
                     Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, mes.Result.Origin);
-                    Log.d(TAG, mes.Result.Newborn);
-                    Log.d(TAG, mes.Result.Infant);
-                    Log.d(TAG, mes.Result.Baby);
+                    mImage.setNewborn(mes.Result.Newborn);
+                    mImage.setInfant(mes.Result.Infant);
+                    mImage.setBaby(mes.Result.Baby);
                     insertAdImageAdapter.addItem(GoRestClient.getAbsoluteUrl(":9090/egg/" + mes.Result.Baby));
                 }
             }
@@ -198,9 +211,94 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_insert_ad, container, false);
         setGvImagesContent(view);
+
+        etTitle = (EditText) view.findViewById(R.id.et_title);
+        etDescription = (EditText) view.findViewById(R.id.et_description);
+        etPrice = (EditText) view.findViewById(R.id.et_price);
+
         setSpCurrencyContent(view);
         setSpCategoryContent(view);
+        setBntContent(view);
         return view;
+    }
+
+    private void setBntContent(View view) {
+        final Button btnPost = (Button) view.findViewById(R.id.btn_post);
+        btnPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isOk = true;
+                if (etTitle.getText().length() > 0) {
+                    mAd.setTitle(etTitle.getText().toString());
+                    etTitle.setError(null);
+                } else {
+                    etTitle.setError("Tell people what you are selling!");
+                    isOk = false;
+                }
+                if (etDescription.getText().length() > 0) {
+                    mAd.setDescription(etDescription.getText().toString());
+                    etDescription.setError(null);
+                } else {
+                    etDescription.setError("People might not buy your item if they don't understand what you're selling. Why not describe it?");
+                    isOk = false;
+                }
+                if (etPrice.getText().length() > 0) {
+                    mAd.setPrice(etPrice.getText().toString());
+                    etPrice.setError(null);
+                } else {
+                    etPrice.setError("Tell people what your item's worth!");
+                    isOk = false;
+                }
+                // FIXME: make an array for mAd's image field
+                //if (mAd.getImage() == null) {
+                //  isOk = false;
+                //  Toast.makeText(getActivity(), "The pictures help you sell better, please upload them now!", Toast.LENGTH_SHORT).show();
+                //}
+                if (!isOk) {
+                    return;
+                }
+
+                final Session session = Session.getActiveSession();
+                if (session != null && session.isOpened()) {
+                    // If the session is open, make an API call to get user data
+                    // and define a new callback to handle the response
+                    Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+                        @Override
+                        public void onCompleted(GraphUser user, Response response) {
+                            // If the response is successful
+                            if (session == Session.getActiveSession()) {
+                                if (user != null) {
+                                    mUserId = user.getId();//user id, user.getName()
+                                    RequestParams p = new RequestParams();
+                                    p.put("profile", mUserId);
+                                    p.put("title", mAd.getTitle());
+                                    p.put("description", mAd.getDescription());
+                                    p.put("category", String.valueOf(mAd.getCategory()));
+                                    p.put("currency", String.valueOf(mAd.getCurrency()));
+                                    p.put("price", mAd.getPrice());
+                                    p.put("baby", mImage.getBaby());
+                                    p.put("infant", mImage.getInfant());
+                                    p.put("newborn", mImage.getNewborn());
+
+                                    GoRestClient.post(":8080/ad/", p, new JsonHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(JSONObject jsonObject) {
+                                            Log.d(TAG, jsonObject.toString());
+                                            Gson gson = new GsonBuilder().create();
+                                            Message mes = gson.fromJson(jsonObject.toString(), Message.class);
+                                            if (mes.Status.equals("OK")) {
+                                                Toast.makeText(getActivity(), "Hooray, your ad has been posted successfully!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    Request.executeBatchAsync(request);
+                }
+            }
+        });
     }
 
     private void setSpCurrencyContent(View view) {
@@ -209,6 +307,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(view.getContext(), "Currency = " + position, Toast.LENGTH_SHORT).show();
+                mAd.setCurrency(position);
             }
 
             @Override
@@ -245,6 +344,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(view.getContext(), "Category = " + position, Toast.LENGTH_SHORT).show();
+                mAd.setCategory(position);
             }
 
             @Override

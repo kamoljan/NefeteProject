@@ -1,10 +1,6 @@
 package org.kamol.nefete.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ViewAnimator;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +15,9 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import org.kamol.nefete.R;
-import org.kamol.nefete.bus.BusProvider;
 
 public class InsertAdImageAdapter extends BaseAdapter {
     private static final int DEFAULT_MAX_COUNT = 3;
