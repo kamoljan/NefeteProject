@@ -93,13 +93,11 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
         Uri imageUri = null;
 
         switch (event.requestCode) {
-            case REQUEST_TAKE: // data = null
-                // REQUEST_TAKE (file://)
+            case REQUEST_TAKE: // REQUEST_TAKE (file://), data = null
                 File file = getTempImageFile();
                 imageUri = Uri.fromFile(file);
                 break;
-            case REQUEST_BROWSE:
-                // REQUEST_BROWSE (content:// or file://)
+            case REQUEST_BROWSE: // REQUEST_BROWSE (content:// or file://)
                 imageUri = event.data.getData();
                 break;
         }
@@ -165,29 +163,41 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                 Log.d(TAG, jsonObject.toString());
                 Gson gson = new GsonBuilder().create();
                 Message mes = gson.fromJson(jsonObject.toString(), Message.class);
-                if (mes.Status.equals("OK")) {
+                if (mes.status.equals("OK")) {
                     Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show();
-                    mImage.setNewborn(mes.Result.Newborn);
-                    mImage.setInfant(mes.Result.Infant);
-                    mImage.setBaby(mes.Result.Baby);
-                    insertAdImageAdapter.addItem(GoRestClient.getAbsoluteUrl(":9090/egg/" + mImage.getBaby()));
+                    switch (insertAdImageAdapter.getRealCount()) {
+                        case 0:
+                            mAd.setNewborn1(mes.result.newborn);
+                            break;
+                        case 1:
+                            mAd.setNewborn2(mes.result.newborn);
+                            break;
+                        case 2:
+                            mAd.setNewborn3(mes.result.newborn);
+                            break;
+                    }
+                    insertAdImageAdapter.addItem(GoRestClient.getAbsoluteUrl(":9090/egg/" + mes.result.newborn));
                 }
+            }
+            @Override
+            public void onFailure(Throwable throwable, JSONObject jsonObject) {
+                Log.d(TAG, jsonObject.toString());
             }
         });
     }
 
     public class Message {
-        /* Camel case, thus, Go! sends like that
-         * we can change it by, `json:"name"` in Go! */
-        public String Status;
-        public Result Result;
+        public String status;
+        public Result result;
 
         public class Result {
-            private String Origin;
-            private String Baby;
-            private String Infant;
-            private String Newborn;
+            private String newborn;
         }
+    }
+
+    public class MessagePostAd {
+        public String status;
+        public String result;
     }
 
     @Override
@@ -249,11 +259,10 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                     etPrice.setError("Tell people what your item's worth!");
                     isOk = false;
                 }
-                // FIXME: make an array for mAd's image field
-                //if (mAd.getImage() == null) {
-                //  isOk = false;
-                //  Toast.makeText(getActivity(), "The pictures help you sell better, please upload them now!", Toast.LENGTH_SHORT).show();
-                //}
+                if (mAd.getNewborn1() == null) {
+                    isOk = false;
+                    Toast.makeText(getActivity(), "The pictures help you sell better, please upload them now!", Toast.LENGTH_SHORT).show();
+                }
                 if (!isOk) {
                     return;
                 }
@@ -276,17 +285,17 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
                                     p.put("category", String.valueOf(mAd.getCategory()));
                                     p.put("currency", String.valueOf(mAd.getCurrency()));
                                     p.put("price", mAd.getPrice());
-                                    p.put("baby", mImage.getBaby());
-                                    p.put("infant", mImage.getInfant());
-                                    p.put("newborn", mImage.getNewborn());
+                                    p.put("newborn1", mAd.getNewborn1());
+                                    p.put("newborn2", mAd.getNewborn2());
+                                    p.put("newborn3", mAd.getNewborn3());
 
                                     GoRestClient.post(":8080/ad/", p, new JsonHttpResponseHandler() {
                                         @Override
                                         public void onSuccess(JSONObject jsonObject) {
                                             Log.d(TAG, jsonObject.toString());
                                             Gson gson = new GsonBuilder().create();
-                                            Message mes = gson.fromJson(jsonObject.toString(), Message.class);
-                                            if (mes.Status.equals("OK")) {
+                                            MessagePostAd mes = gson.fromJson(jsonObject.toString(), MessagePostAd.class);
+                                            if (mes.status.equals("OK")) {
                                                 Toast.makeText(getActivity(), "Hooray, your ad has been posted successfully!", Toast.LENGTH_SHORT).show();
                                             }
                                         }

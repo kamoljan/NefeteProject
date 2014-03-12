@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 apply plugin: 'android'
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.0'
+    buildToolsVersion '19.0.2'
 
     defaultConfig {
         minSdkVersion 14
@@ -26,11 +26,11 @@ dependencies {
     compile 'com.android.support:support-v13:+'
     compile 'com.squareup:otto:1.3.4'
     compile 'com.squareup.picasso:picasso:2.2.0'
+    compile 'com.etsy.android.grid:library:1.0.4'
     //    compile 'com.squareup.okhttp:okhttp:1.3.0'
     //    compile 'com.squareup.retrofit:retrofit:1.4.1'
     compile 'com.loopj.android:android-async-http:1.4.4'
     compile project(':libraries:facebook')
     compile project(':libraries:image-chooser-library')
-    compile files('libs/gson-2.2.4.jar')
-    compile files('/Users/kamol/work/android/NefeteProject/libs/gson-2.2.4.jar')
+    compile files('../libs/gson-2.2.4.jar')
 }
