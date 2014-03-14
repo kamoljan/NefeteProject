@@ -5,8 +5,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class GoRestClient {
-    private static final String BASE_URL = "http://10.40.3.182";
-//    private static final String BASE_URL = "http://nefete.com";
+//    private static final String BASE_URL = "http://10.40.3.182";
+    private static final String BASE_URL = "http://nefete.com";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
