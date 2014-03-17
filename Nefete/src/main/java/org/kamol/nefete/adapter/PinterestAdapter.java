@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.etsy.android.grid.util.DynamicHeightImageView;
-import com.etsy.android.grid.util.DynamicHeightTextView;
+//import com.etsy.android.grid.util.DynamicHeightTextView;
 import com.squareup.picasso.Picasso;
 
 import org.kamol.nefete.R;
@@ -18,15 +18,15 @@ import org.kamol.nefete.http.GoRestClient;
 import java.util.ArrayList;
 import java.util.Random;
 
-/***
+/**
  * PINTEREST ADAPTER
  */
-public class SampleAdapter extends ArrayAdapter<String> {
+public class PinterestAdapter extends ArrayAdapter<String> {
 
-    private static final String TAG = "SampleAdapter";
+    private static final String TAG = "PinterestAdapter";
 
     static class ViewHolder {
-        DynamicHeightTextView txtLineOne;
+        //DynamicHeightTextView txtLineOne;
         DynamicHeightImageView mImageView;
     }
 
@@ -36,7 +36,7 @@ public class SampleAdapter extends ArrayAdapter<String> {
 
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
-    public SampleAdapter(final Context context, final int textViewResourceId) {
+    public PinterestAdapter(final Context context, final int textViewResourceId) {
         super(context, textViewResourceId);
         mLayoutInflater = LayoutInflater.from(context);
         mRandom = new Random();
@@ -54,24 +54,23 @@ public class SampleAdapter extends ArrayAdapter<String> {
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_item_sample, parent, false);
             vh = new ViewHolder();
-            vh.txtLineOne = (DynamicHeightTextView) convertView.findViewById(R.id.txt_line1);
+            //vh.txtLineOne = (DynamicHeightTextView) convertView.findViewById(R.id.txt_line1);
             vh.mImageView = (DynamicHeightImageView) convertView.findViewById(R.id.iv_image);
             // Trigger the download of the URL asynchronously into the image view.
             Picasso.with(this.getContext())
                     .load(GoRestClient.getAbsoluteUrl(":9090/egg/" + getItem(position)))
                     .placeholder(android.R.drawable.ic_menu_camera)
                     .error(android.R.drawable.ic_input_delete)
-                    .resizeDimen(R.dimen.list_detail_image_size, R.dimen.list_detail_image_size)
-                    .centerInside()
+                            //.resizeDimen(R.dimen.list_detail_image_size, R.dimen.list_detail_image_size)
+                            //.centerInside()
                     .into(vh.mImageView);
 
             convertView.setTag(vh);
-        }
-        else {
+        } else {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        double positionHeight = getPositionRatio(position);
+        double positionHeight = getPositionRatio(position, getItem(position));
         int backgroundIndex = position >= mBackgroundColors.size() ?
                 position % mBackgroundColors.size() : position;
 
@@ -79,13 +78,14 @@ public class SampleAdapter extends ArrayAdapter<String> {
 
         Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
 
-        vh.txtLineOne.setHeightRatio(positionHeight);
-        vh.txtLineOne.setText(getItem(position) + position);
+        vh.mImageView.setHeightRatio(positionHeight);
+        //vh.txtLineOne.setHeightRatio(positionHeight);
+        //vh.txtLineOne.setText(getItem(position) + position);
 
         return convertView;
     }
 
-    private double getPositionRatio(final int position) {
+    private double getPositionRatio(final int position, final String egg) {
         double ratio = sPositionHeightRatios.get(position, 0.0);
         // if not yet done generate and stash the columns height
         // in our real world scenario this will be determined by
@@ -93,7 +93,13 @@ public class SampleAdapter extends ArrayAdapter<String> {
         // and maybe a helpful way to get the column height!
         if (ratio == 0) {
             ratio = getRandomHeightRatio();
-            sPositionHeightRatios.append(position, ratio);
+            //0001_689124d1438e909ad97c0d929d590f6b8728d084_D0D2D3_400_741
+            String[] parts = egg.split("_");
+            int w = Integer.valueOf(parts[3]);
+            int h = Integer.valueOf(parts[4]);
+            double r = (double) h / w;
+            sPositionHeightRatios.append(position, r);
+//            sPositionHeightRatios.append(position, ratio);
             Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
         }
         return ratio;

@@ -15,7 +15,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 import org.kamol.nefete.R;
-import org.kamol.nefete.adapter.SampleAdapter;
+import org.kamol.nefete.adapter.PinterestAdapter;
 import org.kamol.nefete.http.GoRestClient;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ListAdContainerFragment extends Fragment {
     private static final int FETCH_DATA_TASK_DURATION = 2000;
 
     private StaggeredGridView mGridView;
-    private SampleAdapter mAdapter;
+    private PinterestAdapter mAdapter;
     private ArrayList<String> mData;
 
     public static ListAdContainerFragment newInstance() {
@@ -39,7 +39,7 @@ public class ListAdContainerFragment extends Fragment {
         mGridView = (StaggeredGridView) view.findViewById(R.id.grid_view);
 
         mGridView.setEmptyView(view.findViewById(android.R.id.empty));
-        mAdapter = new SampleAdapter(getActivity(), R.id.txt_line1);
+        mAdapter = new PinterestAdapter(getActivity(), R.id.txt_line1);
 
         // TODO: Handle savedInstanceState
         // do we have saved data?
