@@ -316,7 +316,8 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(view.getContext(), "Currency = " + position, Toast.LENGTH_SHORT).show();
-                mAd.setCurrency(position);
+//                mAd.setCurrency(position);
+                mAd.setCurrency(parent.getItemAtPosition(position).toString());
             }
 
             @Override

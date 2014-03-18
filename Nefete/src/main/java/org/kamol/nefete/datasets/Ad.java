@@ -3,7 +3,7 @@ package org.kamol.nefete.datasets;
 public class Ad {
     private String title;
     private String description;
-    private int currency;
+    private String currency;
     private String price;
     private int category;
     private String newborn1;
@@ -26,11 +26,11 @@ public class Ad {
         this.description = description;
     }
 
-    public int getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(int currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 
