@@ -7,11 +7,11 @@
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants">
 
-    <com.etsy.android.grid.util.DynamicHeightTextView
-            android:id="@+id/txt_line1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"/>
+    <!--<com.etsy.android.grid.util.DynamicHeightTextView-->
+            <!--android:id="@+id/txt_line1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"/>-->
 
     <com.etsy.android.grid.util.DynamicHeightImageView
             android:id="@+id/iv_image"

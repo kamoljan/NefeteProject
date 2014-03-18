@@ -39,7 +39,8 @@ public class ListAdContainerFragment extends Fragment {
         mGridView = (StaggeredGridView) view.findViewById(R.id.grid_view);
 
         mGridView.setEmptyView(view.findViewById(android.R.id.empty));
-        mAdapter = new PinterestAdapter(getActivity(), R.id.txt_line1);
+//        mAdapter = new PinterestAdapter(getActivity(), R.id.txt_line1);
+        mAdapter = new PinterestAdapter(getActivity(), R.id.iv_image);
 
         // TODO: Handle savedInstanceState
         // do we have saved data?
