@@ -16,6 +16,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 import org.kamol.nefete.R;
 import org.kamol.nefete.adapter.PinterestAdapter;
+import org.kamol.nefete.datasets.AdList;
 import org.kamol.nefete.http.GoRestClient;
 
 import java.util.ArrayList;
@@ -72,31 +73,25 @@ public class ListAdContainerFragment extends Fragment {
 
     public class ListResult {
         private String status;
-        private Result[] result;
+        private AdList[] result;
         private String message;
 
         public ListResult() {
             this(null, null);
         }
 
-        public ListResult(String s, Result[] r) {
+        public ListResult(String s, AdList[] r) {
             this.status = s;
             this.result = r;
         }
 
-        public Result[] getResult() {
+        public AdList[] getResult() {
             return result;
         }
 
-        public void setResult(Result[] result) {
+        public void setResult(AdList[] result) {
             this.result = result;
         }
-    }
-
-    public class Result {
-        private String title;
-        private String price;
-        private String image;
     }
 
     /*
@@ -122,13 +117,8 @@ public class ListAdContainerFragment extends Fragment {
                 Gson gson = new GsonBuilder().create();
                 ListResult listResult = gson.fromJson(jsonObject.toString(), ListResult.class);
                 if (listResult.status.equals("OK")) { //if not found it will returns "ERROR"
-                    String imgUrl = "";
                     for (int i = 0; i < listResult.getResult().length; i++) {
-                        imgUrl = listResult.getResult()[i].image;
-                        Log.d(TAG, "i = " + imgUrl);
-                        if (imgUrl.length() != 0) {
-                            mAdapter.add(imgUrl);
-                        }
+                        mAdapter.add(listResult.getResult()[i]);
                     }
                 }
             }
