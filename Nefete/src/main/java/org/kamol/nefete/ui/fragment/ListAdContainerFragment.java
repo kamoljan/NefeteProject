@@ -19,8 +19,6 @@ import org.kamol.nefete.adapter.PinterestAdapter;
 import org.kamol.nefete.datasets.AdList;
 import org.kamol.nefete.http.GoRestClient;
 
-import java.util.ArrayList;
-
 public class ListAdContainerFragment extends Fragment {
     private static final String TAG = "ListAdContainerFragment";
     public static final String SAVED_DATA_KEY = "SAVED_DATA";
@@ -28,7 +26,6 @@ public class ListAdContainerFragment extends Fragment {
 
     private StaggeredGridView mGridView;
     private PinterestAdapter mAdapter;
-    private ArrayList<String> mData;
 
     public static ListAdContainerFragment newInstance() {
         return new ListAdContainerFragment();
@@ -40,7 +37,7 @@ public class ListAdContainerFragment extends Fragment {
         mGridView = (StaggeredGridView) view.findViewById(R.id.grid_view);
 
         mGridView.setEmptyView(view.findViewById(android.R.id.empty));
-//        mAdapter = new PinterestAdapter(getActivity(), R.id.txt_line1);
+        //mAdapter = new PinterestAdapter(getActivity(), R.id.txt_line1);
         mAdapter = new PinterestAdapter(getActivity(), R.id.iv_image);
 
         // TODO: Handle savedInstanceState
@@ -75,10 +72,6 @@ public class ListAdContainerFragment extends Fragment {
         private String status;
         private AdList[] result;
         private String message;
-
-        public ListResult() {
-            this(null, null);
-        }
 
         public ListResult(String s, AdList[] r) {
             this.status = s;
@@ -116,7 +109,7 @@ public class ListAdContainerFragment extends Fragment {
                 Log.d(TAG, jsonObject.toString());
                 Gson gson = new GsonBuilder().create();
                 ListResult listResult = gson.fromJson(jsonObject.toString(), ListResult.class);
-                if (listResult.status.equals("OK")) { //if not found it will returns "ERROR"
+                if (listResult.status.equals("OK")) { // if not found it will returns "ERROR"
                     for (int i = 0; i < listResult.getResult().length; i++) {
                         mAdapter.add(listResult.getResult()[i]);
                     }
