@@ -163,7 +163,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
         Gson gson = new GsonBuilder().create();
         Message mes = gson.fromJson(jsonObject.toString(), Message.class);
         if (mes.status.equals("OK")) {
-          Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show();
+          Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show(); // TODO: getActivity() can be NullPointerException
           switch (insertAdImageAdapter.getRealCount()) {
             case 0:
               mAd.setImage1(mes.result.newborn);

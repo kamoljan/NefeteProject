@@ -1,0 +1,115 @@
+package org.kamol.nefete.http;
+
+import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
+
+import com.squareup.okhttp.OkHttpClient;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.ObjectGraph;
+import dagger.Provides;
+
+@Module
+public class NetworkModule {
+  @Provides @Singleton
+  public OkHttpClient providerOkHttpClient() {
+    return new OkHttpClient();
+  }
+
+  @Provides @Singleton
+  public TwitterApi providerTwitterApi(OkHttpClient client) {
+    return new TwitterApi(client);
+  }
+
+
+}
+
+//------------------ Construction injection
+public class TweeterApp {
+  private final Tweeter tweeter;
+
+  private final Timeline timeline;
+
+  @Inject
+  public TweeterApp(Tweeter tweeter, Timeline timeline) {
+    this.tweeter = tweeter;
+    this.timeline = timeline;
+  }
+}
+
+//------------------ Field injection
+public class TweeterActivity extends Activity {
+  @Inject Tweeter tweeter;
+
+  @Inject Timeline timeline;
+}
+
+//------------------ ObjectGraph
+ObjectGraph og = ObjectGraph.create(
+    new NetworkModule(),
+    new TwitterModule("JakeWharton")
+);
+
+// Using constructor injection:
+TweeterApp app = og.get(TwetterApp.class);
+
+// Using field injection:
+TweeterApp app = new TweeterApp();
+og.inject(app);
+
+//-----------------------------------------------------------
+
+public class ExampleApp extends Application {
+  private ObjectGraph objectGraph;
+
+  @Override public void onCreate() {
+    super.onCreate();
+
+    objectGraph = ObjectGraph.create(
+        new ExampleModule()
+    );
+  }
+
+  public ObjectGraph getObjectGraph() {
+    return objectGraph;
+  }
+}
+
+public class ExampleActivity extends Activity {
+  @Inject Foo foo;
+  @Inject Bar bar;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    ExampleApp app = (ExampleApp) getApplication();
+    app.getObjectGraph().inject(this);
+  }
+}
+
+// Module
+@Module(
+    injects = {
+        ExampleActivity.class
+    }
+)
+public class ExampleModule {
+  @Provides @Singleton Foo provideFoo() {
+    return new Foo();
+  }
+
+  @Provides @Singleton Bar provideBar() {
+    return new Bar();
+  }
+}
+
+
+
+
+
+

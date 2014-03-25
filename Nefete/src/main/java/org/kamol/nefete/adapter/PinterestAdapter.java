@@ -61,6 +61,7 @@ public class PinterestAdapter extends ArrayAdapter<AdList> {
     vh.ivPicture.setImageDrawable(null); //https://github.com/square/picasso/issues/54 issue
     Picasso.with(convertView.getContext())
         .load(GoRestClient.getAbsoluteUrl(":9090/egg/" + egg))
+        .fit()
         .into(vh.ivPicture);
     convertView.setBackgroundColor(Color.parseColor("#" + parts[2]));
     vh.ivPicture.setHeightRatio((double) h / w);

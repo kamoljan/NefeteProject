@@ -1,9 +1,11 @@
 package org.kamol.nefete.ui.activity;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,11 +20,15 @@ import org.kamol.nefete.http.GoRestClient;
 public class ViewActivity extends Activity {
   private static final String TAG = "ViewActivity";
   private ImageView ivImage1 = null;
+  private TextView tvTitle = null;
+  private TextView tvDescription = null;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_view);
     ivImage1 = (ImageView) findViewById(R.id.iv_image1);
+    tvTitle = (TextView) findViewById(R.id.tv_title);
+    tvDescription = (TextView) findViewById(R.id.tv_description);
   }
 
   @Override public void onResume() {
@@ -73,9 +79,15 @@ public class ViewActivity extends Activity {
         Log.d(TAG, jsonObject.toString());
         Gson gson = new GsonBuilder().create();
         AdResult adResult = gson.fromJson(jsonObject.toString(), AdResult.class);
+        String egg = adResult.getResult().getImage1();
+        String[] parts = adResult.getResult().getImage1().split("_");
+        tvTitle.setText(adResult.getResult().getTitle());
+        tvDescription.setText(adResult.getResult().getDescription());
+        ivImage1.setBackgroundColor(Color.parseColor("#" + parts[2]));
         if (adResult.status.equals("OK")) {
           Picasso.with(getApplicationContext())
-              .load(GoRestClient.getAbsoluteUrl(":9090/egg/" + adResult.getResult().getImage1()))
+              .load(GoRestClient.getAbsoluteUrl(":9090/egg/" + egg))
+              .fit()
               .into(ivImage1);
         }
       }
