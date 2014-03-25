@@ -3,6 +3,7 @@ package org.kamol.nefete.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +19,15 @@ import org.kamol.nefete.datasets.AdList;
 import org.kamol.nefete.http.GoRestClient;
 import org.kamol.nefete.ui.activity.ViewActivity;
 
-import static android.support.v4.app.ActivityCompat.startActivity;
-
 /**
  * PINTEREST ADAPTER
  */
 public class PinterestAdapter extends ArrayAdapter<AdList> {
   private static final String TAG = "PinterestAdapter";
-
   public final static String AD_ID = "org.kamol.nefete.AD_ID";
 
   static class ViewHolder {
     DynamicHeightImageView ivPicture;
-
     TextView tvPrice;
   }
 
@@ -46,6 +43,7 @@ public class PinterestAdapter extends ArrayAdapter<AdList> {
     ViewHolder vh;
     //AdList ad = getItem(position);
     String egg = getItem(position).getImage();
+    final String adId = getItem(position).getId();
     //0001_c6ce48134c6e593ecff1b3216e82f611de1eb042_5C5958_400_300
     String[] parts = egg.split("_");
     int w = Integer.parseInt(parts[3]);
@@ -70,8 +68,11 @@ public class PinterestAdapter extends ArrayAdapter<AdList> {
       @Override public void onClick(final View v) {
         Toast.makeText(getContext(), "The image is " + position + " clicked!",
             Toast.LENGTH_SHORT).show();
+
         Intent i = new Intent(getContext(), ViewActivity.class);
-        i.putExtra(AD_ID, position);
+        Bundle b = new Bundle();
+        b.putString("adId", adId);
+        i.putExtras(b);
         getContext().startActivity(i);
       }
     });
