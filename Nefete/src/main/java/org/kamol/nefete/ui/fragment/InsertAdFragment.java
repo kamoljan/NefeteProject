@@ -89,17 +89,21 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
 
   @Subscribe public void onActivityResultEvent(ActivityResultEvent event) {
     if (event.resultCode != Activity.RESULT_OK) return;
-    Uri imageUri = null;
-
+    Uri imageUri;
     switch (event.requestCode) {
       case REQUEST_TAKE: // REQUEST_TAKE (file://), data = null
         File file = getTempImageFile();
         imageUri = Uri.fromFile(file);
+        putImageFromUri(imageUri);
         break;
       case REQUEST_BROWSE: // REQUEST_BROWSE (content:// or file://)
         imageUri = event.data.getData();
+        putImageFromUri(imageUri);
         break;
     }
+  }
+
+  private void putImageFromUri(Uri imageUri) {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     try {
       Bitmap bitmap = getThumbnail(imageUri);
@@ -116,7 +120,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
   }
 
   // Credit to http://stackoverflow.com/questions/3879992/get-bitmap-from-an-uri-android
-  public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
+  public Bitmap getThumbnail(Uri uri) throws FileNotFoundException {
     InputStream input = getActivity().getContentResolver().openInputStream(uri);
 
     BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
@@ -125,7 +129,11 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
     onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
     BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
     if (input != null) {
-      input.close();
+      try {
+        input.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
       return null;
@@ -142,7 +150,11 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
     input = getActivity().getContentResolver().openInputStream(uri);
     Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
     if (input != null) {
-      input.close();
+      try {
+        input.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return bitmap;
   }
@@ -163,7 +175,8 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
         Gson gson = new GsonBuilder().create();
         Message mes = gson.fromJson(jsonObject.toString(), Message.class);
         if (mes.status.equals("OK")) {
-          Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show(); // TODO: getActivity() can be NullPointerException
+          Toast.makeText(getActivity(), "Uploaded successfully", Toast.LENGTH_SHORT).show(); //
+          // TODO: getActivity() can be NullPointerException
           switch (insertAdImageAdapter.getRealCount()) {
             case 0:
               mAd.setImage1(mes.result.newborn);
@@ -215,7 +228,7 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+                                     Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_insert_ad, container, false);
     if (view != null) {
       setGvImagesContent(view);
@@ -310,7 +323,8 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
   private void setSpCurrencyContent(View view) {
     Spinner spCurrency = (Spinner) view.findViewById(R.id.sp_currency);
     spCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+      @Override public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                           long id) {
         mAd.setCurrency(parent.getItemAtPosition(position).toString());
       }
 
@@ -341,7 +355,8 @@ public class InsertAdFragment extends Fragment implements ImageChooserDialogFrag
   private void setSpCategoryContent(View view) {
     Spinner spCategory = (Spinner) view.findViewById(R.id.sp_category);
     spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+      @Override public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                           long id) {
         mAd.setCategory(position);
       }
 

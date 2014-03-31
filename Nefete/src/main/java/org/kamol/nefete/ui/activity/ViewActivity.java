@@ -87,7 +87,6 @@ public class ViewActivity extends Activity {
         if (adResult.status.equals("OK")) {
           Picasso.with(getApplicationContext())
               .load(GoRestClient.getAbsoluteUrl(":9090/egg/" + egg))
-              .fit()
               .into(ivImage1);
         }
       }
